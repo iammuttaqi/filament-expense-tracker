@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\IncomeResource\Pages;
-use App\Filament\Resources\IncomeResource\RelationManagers;
 use App\Models\Income;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
@@ -13,7 +12,6 @@ use Filament\Tables;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class IncomeResource extends Resource
 {
@@ -68,12 +66,12 @@ class IncomeResource extends Resource
                         return $query
                             ->when(
                                 $data['created_from'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
                             )->when(
                                 $data['created_until'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
                             );
-                    })
+                    }),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

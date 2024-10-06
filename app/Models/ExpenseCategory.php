@@ -29,7 +29,7 @@ class ExpenseCategory extends Model
         $count = 1;
 
         while (static::whereSlug($slug)->exists()) {
-            $slug = $original_slug . '-' . $count++;
+            $slug = $original_slug.'-'.$count++;
         }
 
         return $slug;
