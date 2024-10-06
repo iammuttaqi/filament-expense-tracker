@@ -15,7 +15,7 @@ class ExpenseSeeder extends Seeder
     {
         $data = [];
 
-        foreach (range(1, 1000) as $key => $range) {
+        foreach (range(1, 700) as $key => $range) {
             $items = [
                 fake()->word() => fake()->numberBetween(100, 500),
                 fake()->word() => fake()->numberBetween(100, 500),
