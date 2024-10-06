@@ -6,12 +6,15 @@ use App\Filament\Resources\ExpenseResource\Pages;
 use App\Filament\Resources\ExpenseResource\RelationManagers;
 use App\Models\Expense;
 use Filament\Forms;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Validation\ValidationException;
 
 class ExpenseResource extends Resource
 {
@@ -24,6 +27,7 @@ class ExpenseResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('expense_category_id')
+                    ->required()
                     ->relationship(name: 'expense_category', titleAttribute: 'title')
                     ->searchable()
                     ->preload()
@@ -38,10 +42,13 @@ class ExpenseResource extends Resource
                     ->numeric()
                     ->prefix('৳')
                     ->placeholder(__('Amount')),
-                Forms\Components\TagsInput::make('items')
+                Forms\Components\KeyValue::make('items')
                     ->columnSpanFull()
-                    ->placeholder(__('Items'))
-                    ->splitKeys(['Tab', ',']),
+                    ->addActionLabel(__('Add Item'))
+                    ->keyLabel(__('Items'))
+                    ->valueLabel(__('Prices'))
+                    ->keyPlaceholder(__('Item'))
+                    ->valuePlaceholder(__('Price')),
                 Forms\Components\Textarea::make('note')
                     ->columnSpanFull()
                     ->placeholder(__('Note')),
@@ -62,11 +69,27 @@ class ExpenseResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
+            ->defaultSort('created_at', 'desc')
+            ->defaultPaginationPageOption(50)
             ->filters([
-                //
+                Filter::make('created_at')
+                    ->form([
+                        DatePicker::make('created_from')->native(false),
+                        DatePicker::make('created_until')->native(false),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
