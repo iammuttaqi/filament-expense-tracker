@@ -23,16 +23,25 @@ class IncomeResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('income_category_id')
+                Forms\Components\Select::make('income_category_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship(name: 'income_category', titleAttribute: 'title')
+                    ->searchable()
+                    ->preload()
+                    ->columnSpanFull()
+                    ->placeholder(__('Income Category')),
                 Forms\Components\DatePicker::make('date')
-                    ->required(),
+                    ->required()
+                    ->placeholder(__('Date'))
+                    ->native(false),
                 Forms\Components\TextInput::make('amount')
                     ->required()
-                    ->numeric(),
+                    ->numeric()
+                    ->prefix('৳')
+                    ->placeholder(__('Amount')),
                 Forms\Components\Textarea::make('note')
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->placeholder(__('Note')),
             ]);
     }
 
@@ -40,22 +49,16 @@ class IncomeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('income_category_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('income_category.title'),
                 Tables\Columns\TextColumn::make('date')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('amount')
+                    ->prefix('৳')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([

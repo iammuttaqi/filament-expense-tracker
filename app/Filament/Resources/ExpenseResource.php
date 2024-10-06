@@ -23,18 +23,28 @@ class ExpenseResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('expense_category_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('expense_category_id')
+                    ->relationship(name: 'expense_category', titleAttribute: 'title')
+                    ->searchable()
+                    ->preload()
+                    ->columnSpanFull()
+                    ->placeholder(__('Expense Category')),
                 Forms\Components\DatePicker::make('date')
-                    ->required(),
+                    ->required()
+                    ->placeholder(__('Date'))
+                    ->native(false),
                 Forms\Components\TextInput::make('amount')
                     ->required()
-                    ->numeric(),
-                Forms\Components\Textarea::make('items')
-                    ->columnSpanFull(),
+                    ->numeric()
+                    ->prefix('৳')
+                    ->placeholder(__('Amount')),
+                Forms\Components\TagsInput::make('items')
+                    ->columnSpanFull()
+                    ->placeholder(__('Items'))
+                    ->splitKeys(['Tab', ',']),
                 Forms\Components\Textarea::make('note')
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->placeholder(__('Note')),
             ]);
     }
 
@@ -42,20 +52,15 @@ class ExpenseResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('expense_category_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('expense_category.title'),
                 Tables\Columns\TextColumn::make('date')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('amount')
+                    ->prefix('৳')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

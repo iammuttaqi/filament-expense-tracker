@@ -7,6 +7,7 @@ use App\Filament\Resources\ExpenseCategoryResource\RelationManagers;
 use App\Models\ExpenseCategory;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -24,9 +25,18 @@ class ExpenseCategoryResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
-                    ->required(),
+                    ->required()
+                    ->placeholder(__('Title'))
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function (Set $set, ?string $state) {
+                        return $set('slug', ExpenseCategory::generateSlug($state));
+                    }),
                 Forms\Components\TextInput::make('slug')
-                    ->required(),
+                    ->required()
+                    ->placeholder(__('Slug'))
+                    ->helperText('Will automatically be created from the title')
+                    ->unique(ignoreRecord: true)
+                    ->readOnly(),
             ]);
     }
 
