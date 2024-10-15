@@ -53,4 +53,11 @@ class User extends Authenticatable implements FilamentUser
         return true;
         // return $this->hasVerifiedEmail();
     }
+
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            $user->role = 'user';
+        });
+    }
 }

@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\User\Resources;
 
-use App\Filament\Resources\IncomeResource\Pages;
+use App\Filament\User\Resources\IncomeResource\Pages;
 use App\Models\Income;
 use Filament\Forms;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class IncomeResource extends Resource
 {
@@ -25,7 +22,7 @@ class IncomeResource extends Resource
             ->schema([
                 Forms\Components\Select::make('income_category_id')
                     ->required()
-                    ->relationship(name: 'income_category', titleAttribute: 'title')
+                    ->relationship(name: 'income_category', titleAttribute: 'title', modifyQueryUsing: fn ($query) => $query->where('user_id', auth()->user()->id))
                     ->searchable()
                     ->preload()
                     ->columnSpanFull()
@@ -33,6 +30,7 @@ class IncomeResource extends Resource
                 Forms\Components\DatePicker::make('date')
                     ->required()
                     ->placeholder(__('Date'))
+                    ->default(now())
                     ->native(false),
                 Forms\Components\TextInput::make('amount')
                     ->required()
@@ -48,30 +46,25 @@ class IncomeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->where('user_id', auth()->user()->id))
             ->columns([
-                Tables\Columns\TextColumn::make('income_category.title'),
-                Tables\Columns\TextColumn::make('date')->date()->sortable(),
-                Tables\Columns\TextColumn::make('amount')->prefix('৳')->numeric()->sortable(),
-                Tables\Columns\TextColumn::make('created_at')->dateTime(),
-            ])
-            ->defaultSort('created_at', 'desc')
-            ->defaultPaginationPageOption(50)
-            ->filters([
-                Filter::make('created_at')
-                    ->form([
-                        DatePicker::make('created_from')->native(false),
-                        DatePicker::make('created_until')->native(false),
-                    ])
-                    ->query(function (Builder $query, array $data): Builder {
-                        return $query
-                            ->when(
-                                $data['created_from'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date)
-                            )->when(
-                                $data['created_until'],
-                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date)
-                            );
-                    }),
+                Tables\Columns\TextColumn::make('income_category.title')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('date')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('amount')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -81,7 +74,9 @@ class IncomeResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc')
+            ->defaultPaginationPageOption(50);
     }
 
     public static function getPages(): array

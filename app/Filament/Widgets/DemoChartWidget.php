@@ -18,7 +18,7 @@ class DemoChartWidget extends ChartWidget
         $current_year = Carbon::now()->year;
 
         $monthly_expenses = array_fill(1, 12, 0);
-        $expenses = Expense::whereYear('date', $current_year)->get();
+        $expenses = Expense::whereYear('date', $current_year)->where('user_id', auth()->user()->id)->get();
 
         foreach ($expenses as $expense) {
             $month = Carbon::parse($expense->date)->month; // Get month number (1-12)
@@ -26,7 +26,7 @@ class DemoChartWidget extends ChartWidget
         }
 
         $monthly_incomes = array_fill(1, 12, 0);
-        $incomes = Income::whereYear('date', $current_year)->get();
+        $incomes = Income::whereYear('date', $current_year)->where('user_id', auth()->user()->id)->get();
 
         foreach ($incomes as $income) {
             $month = Carbon::parse($income->date)->month; // Get month number (1-12)

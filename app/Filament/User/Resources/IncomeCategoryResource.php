@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\User\Resources;
 
-use App\Filament\Resources\ExpenseCategoryResource\Pages;
-use App\Models\ExpenseCategory;
+use App\Filament\User\Resources\IncomeCategoryResource\Pages;
+use App\Models\IncomeCategory;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
@@ -11,9 +11,9 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 
-class ExpenseCategoryResource extends Resource
+class IncomeCategoryResource extends Resource
 {
-    protected static ?string $model = ExpenseCategory::class;
+    protected static ?string $model = IncomeCategory::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -26,7 +26,7 @@ class ExpenseCategoryResource extends Resource
                     ->placeholder(__('Title'))
                     ->live(onBlur: true)
                     ->afterStateUpdated(function (Set $set, ?string $state) {
-                        return $set('slug', ExpenseCategory::generateSlug($state));
+                        return $set('slug', IncomeCategory::generateSlug($state));
                     }),
                 Forms\Components\TextInput::make('slug')
                     ->required()
@@ -40,6 +40,7 @@ class ExpenseCategoryResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn ($query) => $query->where('user_id', auth()->user()->id))
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
@@ -47,12 +48,7 @@ class ExpenseCategoryResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -65,13 +61,14 @@ class ExpenseCategoryResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManageExpenseCategories::route('/'),
+            'index' => Pages\ManageIncomeCategories::route('/'),
         ];
     }
 }

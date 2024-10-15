@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\IncomeCategory;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -13,16 +14,20 @@ class IncomeCategorySeeder extends Seeder
      */
     public function run(): void
     {
+        $users = User::where('role', 'user')->get();
         $categories = [];
 
-        foreach (range(1, 10) as $key => $range) {
-            $title = fake()->words(nb: 2, asText: true);
-            $categories[] = [
-                'title' => Str::headline($title),
-                'slug' => Str::slug($title),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+        foreach ($users as $key => $user) {
+            foreach (range(1, 10) as $key => $range) {
+                $title = fake()->words(nb: 2, asText: true);
+                $categories[] = [
+                    'user_id' => $user->id,
+                    'title' => Str::headline($title),
+                    'slug' => Str::slug($user->name.'-'.$title.'-'.$user->id),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
         }
 
         IncomeCategory::insert($categories);
