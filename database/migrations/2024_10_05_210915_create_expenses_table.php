@@ -18,7 +18,7 @@ return new class extends Migration
 
             $table->foreignIdFor(User::class)->constrained();
             $table->foreignIdFor(ExpenseCategory::class)->constrained();
-            $table->date('date');
+            $table->timestamp('date');
             $table->decimal('amount');
             $table->json('items')->nullable();
             $table->text('note')->nullable();
