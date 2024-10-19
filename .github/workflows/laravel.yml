@@ -24,10 +24,11 @@ jobs:
       - name: Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
 
-      - name: Create Database
+      - name: Create Database and seed
         run: |
           mkdir -p database
           touch database/database.sqlite
+          php artisan migrate:fresh --seed
 
       # - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       #   env:
