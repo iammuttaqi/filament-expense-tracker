@@ -1,2 +1,2 @@
 - commodities listing with their recent price
-- commotity page with "recent price, average price, old prices with date"
+- commodity page with "recent price, average price, old prices with date"
