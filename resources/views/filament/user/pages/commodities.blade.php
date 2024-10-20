@@ -26,7 +26,7 @@
                         <td class="px-6 py-4">Tk. {{ number_format($item['price'], 2) }}</td>
                         <td class="px-6 py-4">{{ \Carbon\Carbon::parse($item['date'])->format('Y-m-d h:i A') }}</td>
                         <td class="px-6 py-4">
-                            <x-filament::button href="/" icon="heroicon-m-eye" size="xs" tag="a" target="_blank">View</x-filament::button>
+                            <x-filament::button href="{{ route('filament.user.pages.commodities-show') }}" icon="heroicon-m-eye" size="xs" tag="a" target="_blank">View</x-filament::button>
                         </td>
                     </tr>
                 @endforeach
