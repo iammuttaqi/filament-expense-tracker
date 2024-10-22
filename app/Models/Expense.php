@@ -14,6 +14,7 @@ class Expense extends Model
     {
         return [
             'items' => 'array',
+            'date' => 'datetime',
         ];
     }
 

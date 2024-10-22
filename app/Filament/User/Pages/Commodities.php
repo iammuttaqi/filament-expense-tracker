@@ -3,17 +3,7 @@
 namespace App\Filament\User\Pages;
 
 use App\Models\Expense;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
 use Filament\Pages\Page;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Concerns\InteractsWithTable;
-use Filament\Tables\Contracts\HasTable;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Number;
 use Livewire\Attributes\Url;
 use Livewire\WithPagination;
 
@@ -32,12 +22,13 @@ class Commodities extends Page
 
     public function getViewData(): array
     {
-        $itemsWithDates = Expense::select('items', 'date')
+        $items_with_dates = Expense::select('items', 'date')
+            ->where('user_id', auth()->user()->id)
             ->get()
             ->flatMap(function ($expense) {
                 return collect($expense->items)->map(function ($price, $title) use ($expense) {
                     return [
-                        'title' => $title,
+                        'title' => strtolower(trim($title)),
                         'price' => $price,
                         'date'  => $expense->date,
                     ];
@@ -48,12 +39,16 @@ class Commodities extends Page
                 return $group->sortByDesc('date')->first();
             })
             ->filter(function ($item) {
-                return stripos($item['title'], $this->query) !== false;
+                return is_numeric($item['price']) && stripos($item['title'], strtolower($this->query)) !== false;
+            })
+            ->map(function ($item) {
+                $item['title'] = str()->headline($item['title']);
+                return $item;
             })
             ->values();
 
         return [
-            'items' => $itemsWithDates,
+            'items' => $items_with_dates,
         ];
     }
 }

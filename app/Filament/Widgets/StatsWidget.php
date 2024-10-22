@@ -11,6 +11,7 @@ class StatsWidget extends BaseWidget
 {
     protected function getStats(): array
     {
+        return [];
         return [
             Stat::make('Expense This Month', Expense::whereMonth('date', Carbon::now()->month)->value('amount')),
             Stat::make('Bounce rate', '21%'),

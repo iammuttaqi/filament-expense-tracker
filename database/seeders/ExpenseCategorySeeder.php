@@ -15,15 +15,15 @@ class ExpenseCategorySeeder extends Seeder
     public function run(): void
     {
         $users = User::where('role', 'user')->get();
-        $categories = [];
+        $pre_categories = ['Rent', 'Utilities', 'Groceries', 'Transportation', 'Healthcare', 'Insurance', 'Debt Payments', 'Entertainment', 'Dining Out', 'Clothing', 'Education', 'Childcare', 'Subscriptions', 'Savings & Investments', 'Taxes', 'Gifts & Donations', 'Maintenance & Repairs', 'Travel', 'Office Supplies', 'Miscellaneous'];
 
+        $categories = [];
         foreach ($users as $key => $user) {
-            foreach (range(1, 10) as $key => $range) {
-                $title = fake()->words(nb: 2, asText: true);
+            foreach ($pre_categories as $key => $pre_category) {
                 $categories[] = [
                     'user_id' => $user->id,
-                    'title' => Str::headline($title),
-                    'slug' => Str::slug($user->name.'-'.$title.'-'.$user->id),
+                    'title' => Str::headline($pre_category),
+                    'slug' => Str::slug($user->name . '-' . $pre_category . '-' . $user->id),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
