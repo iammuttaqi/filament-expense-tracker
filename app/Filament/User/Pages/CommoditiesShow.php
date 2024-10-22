@@ -33,16 +33,19 @@ class CommoditiesShow extends Page
         })->values();
 
         $this->latest_price = number_format(collect($filtered_expenses)->sortByDesc('date')->first()?->items[static::$title] ?? 0, 2);
-        $this->average_price = number_format(collect($filtered_expenses)->avg(fn($expense) => $expense->items[static::$title]), 2);
-        $this->recent_prices = collect($filtered_expenses)->sortByDesc('date')->take(10)->pluck('items.' . static::$title, 'date')
+        $this->average_price = number_format(collect($filtered_expenses)->avg(fn ($expense) => $expense->items[static::$title]), 2);
+        $this->recent_prices = collect($filtered_expenses)->sortByDesc('date')->take(10)->pluck('items.'.static::$title, 'date')
             ->mapWithKeys(function ($recent_price, $date) {
                 $formatted_date = Carbon::parse($date)->format('Y-m-d | h:i A');
-                return [$formatted_date => 'Tk. ' . number_format($recent_price, 2)];
+
+                return [$formatted_date => 'Tk. '.number_format($recent_price, 2)];
             });
     }
 
     public $latest_price;
+
     public $average_price;
+
     public $recent_prices;
 
     public function itemInfolist(Infolist $infolist): Infolist

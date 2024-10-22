@@ -30,7 +30,7 @@ class Commodities extends Page
                     return [
                         'title' => strtolower(trim($title)),
                         'price' => $price,
-                        'date'  => $expense->date,
+                        'date' => $expense->date,
                     ];
                 });
             })
@@ -43,6 +43,7 @@ class Commodities extends Page
             })
             ->map(function ($item) {
                 $item['title'] = str()->headline($item['title']);
+
                 return $item;
             })
             ->values();

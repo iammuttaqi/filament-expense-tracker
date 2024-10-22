@@ -23,7 +23,7 @@ class ExpenseCategorySeeder extends Seeder
                 $categories[] = [
                     'user_id' => $user->id,
                     'title' => Str::headline($pre_category),
-                    'slug' => Str::slug($user->name . '-' . $pre_category . '-' . $user->id),
+                    'slug' => Str::slug($user->name.'-'.$pre_category.'-'.$user->id),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

@@ -22,7 +22,7 @@ class ExpenseResource extends Resource
             ->schema([
                 Forms\Components\Select::make('expense_category_id')
                     ->required()
-                    ->relationship(name: 'expense_category', titleAttribute: 'title', modifyQueryUsing: fn($query) => $query->where('user_id', auth()->user()->id))
+                    ->relationship(name: 'expense_category', titleAttribute: 'title', modifyQueryUsing: fn ($query) => $query->where('user_id', auth()->user()->id))
                     ->searchable()
                     ->preload()
                     ->columnSpanFull()
@@ -53,7 +53,7 @@ class ExpenseResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn($query) => $query->where('user_id', auth()->user()->id))
+            ->modifyQueryUsing(fn ($query) => $query->where('user_id', auth()->user()->id))
             ->columns([
                 Tables\Columns\TextColumn::make('expense_category.title')
                     ->numeric()
