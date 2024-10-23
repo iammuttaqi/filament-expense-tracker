@@ -6,6 +6,7 @@ use App\Filament\User\Resources\ExpenseResource\Pages;
 use App\Models\Expense;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -36,14 +37,19 @@ class ExpenseResource extends Resource
                     ->required()
                     ->numeric()
                     ->prefix('৳')
-                    ->placeholder(__('Amount')),
+                    ->placeholder(__('Amount'))
+                    ->readOnly(),
                 Forms\Components\KeyValue::make('items')
                     ->columnSpanFull()
                     ->addActionLabel(__('Add Item'))
                     ->keyLabel(__('Items'))
                     ->valueLabel(__('Prices'))
                     ->keyPlaceholder(__('Item'))
-                    ->valuePlaceholder(__('Price')),
+                    ->valuePlaceholder(__('Price'))
+                    ->reactive()
+                    ->afterStateUpdated(function (array $state, Set $set) {
+                        $set('amount', collect($state)->filter(fn ($value) => ! empty($value))->sum());
+                    }),
                 Forms\Components\Textarea::make('note')
                     ->columnSpanFull()
                     ->placeholder(__('Note')),
@@ -65,10 +71,6 @@ class ExpenseResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
