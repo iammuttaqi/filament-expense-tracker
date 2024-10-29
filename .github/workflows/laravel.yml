@@ -24,6 +24,9 @@ jobs:
       - name: Directory Permissions
         run: chmod -R 777 storage bootstrap/cache
 
+      - name: Mysql migrate fresh seed
+        run: php aritsan migrate:fresh --seed
+
       # - name: Create Database and seed
       #   run: |
       #     mkdir -p database
