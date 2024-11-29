@@ -9,7 +9,7 @@ use Filament\Widgets\ChartWidget;
 
 class DemoChartWidget extends ChartWidget
 {
-    protected static ?string $heading = 'Chart';
+    protected static ?string $heading = '2024 Incomes and Expense';
 
     protected static ?int $sort = 3;
 
@@ -20,7 +20,7 @@ class DemoChartWidget extends ChartWidget
         $current_year = Carbon::now()->year;
 
         $monthly_expenses = array_fill(1, 12, 0);
-        $expenses = Expense::whereYear('date', $current_year)->where('user_id', auth()->user()->id)->get();
+        $expenses = Expense::whereYear('date', $current_year)->where('user_id', request()->user()->id)->get();
 
         foreach ($expenses as $expense) {
             $month = Carbon::parse($expense->date)->month; // Get month number (1-12)
@@ -28,7 +28,7 @@ class DemoChartWidget extends ChartWidget
         }
 
         $monthly_incomes = array_fill(1, 12, 0);
-        $incomes = Income::whereYear('date', $current_year)->where('user_id', auth()->user()->id)->get();
+        $incomes = Income::whereYear('date', $current_year)->where('user_id', request()->user()->id)->get();
 
         foreach ($incomes as $income) {
             $month = Carbon::parse($income->date)->month; // Get month number (1-12)
@@ -44,13 +44,13 @@ class DemoChartWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Income in ' . $current_year,
+                    'label' => 'Income in '.$current_year,
                     'data' => array_values($monthly_incomes),
                     'backgroundColor' => '#22c55e',
                     'borderColor' => '#22c55e',
                 ],
                 [
-                    'label' => 'Expense in ' . $current_year,
+                    'label' => 'Expense in '.$current_year,
                     'data' => array_values($monthly_expenses),
                     'backgroundColor' => $expense_colors, // Dynamic colors for each month
                     'borderColor' => $expense_colors, // Matching border color

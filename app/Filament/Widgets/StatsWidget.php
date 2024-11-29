@@ -14,12 +14,12 @@ class StatsWidget extends BaseWidget
 
     protected function getStats(): array
     {
-        $income_this_month = Income::where('user_id', auth()->user()->id)->whereYear('date', Carbon::now()->year)->whereMonth('date', Carbon::now()->month)->sum('amount');
-        $expense_this_month = Expense::where('user_id', auth()->user()->id)->whereYear('date', Carbon::now()->year)->whereMonth('date', Carbon::now()->month)->sum('amount');
+        $income_this_month = Income::where('user_id', request()->user()->id)->whereYear('date', Carbon::now()->year)->whereMonth('date', Carbon::now()->month)->sum('amount');
+        $expense_this_month = Expense::where('user_id', request()->user()->id)->whereYear('date', Carbon::now()->year)->whereMonth('date', Carbon::now()->month)->sum('amount');
 
         $remaining_amount = $income_this_month - $expense_this_month;
 
-        $remaining_budget_label = $remaining_amount < 0 ? 'Overspent by ' . number_format(abs($remaining_amount), 2) : 'Remaining: ' . number_format($remaining_amount, 2);
+        $remaining_budget_label = $remaining_amount < 0 ? 'Overspent by '.number_format(abs($remaining_amount), 2) : 'Remaining: '.number_format($remaining_amount, 2);
         $remaining_budget_color = $remaining_amount < 0 ? 'danger' : 'success';
 
         return [
