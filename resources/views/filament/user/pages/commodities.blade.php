@@ -1,9 +1,9 @@
 <x-filament-panels::page>
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div class="relative overflow-x-auto rounded-xl ring-1 ring-gray-950/5">
         <div class="bg-white p-4 dark:bg-gray-900">
             <label class="sr-only" for="table-search">Search</label>
-            <form class="relative" wire:submit="search">
-                <x-filament::input.wrapper class="max-w-fit">
+            <form class="relative flex justify-end" wire:submit="search">
+                <x-filament::input.wrapper class="max-w-fit" prefix-icon="heroicon-m-magnifying-glass">
                     <x-filament::input placeholder="Search for items" type="text" type="search" wire:model="query" />
                 </x-filament::input.wrapper>
             </form>
