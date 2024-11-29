@@ -19,7 +19,7 @@ class StatsWidget extends BaseWidget
 
         $remaining_amount = $income_this_month - $expense_this_month;
 
-        $remaining_budget_label = $remaining_amount < 0 ? 'Overspent by ' . number_format(abs($remaining_amount), 2) : 'Remaining: ' . number_format($remaining_amount, 2);
+        $remaining_budget_label = $remaining_amount < 0 ? 'Overspent by '.number_format(abs($remaining_amount), 2) : 'Remaining: '.number_format($remaining_amount, 2);
         $remaining_budget_color = $remaining_amount < 0 ? 'danger' : 'success';
 
         return [

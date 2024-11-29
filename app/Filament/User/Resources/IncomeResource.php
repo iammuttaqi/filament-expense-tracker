@@ -22,7 +22,7 @@ class IncomeResource extends Resource
             ->schema([
                 Forms\Components\Select::make('income_category_id')
                     ->required()
-                    ->relationship(name: 'income_category', titleAttribute: 'title', modifyQueryUsing: fn($query) => $query->where('user_id', auth()->user()->id))
+                    ->relationship(name: 'income_category', titleAttribute: 'title', modifyQueryUsing: fn ($query) => $query->where('user_id', auth()->user()->id))
                     ->searchable()
                     ->preload()
                     ->columnSpanFull()
@@ -46,7 +46,7 @@ class IncomeResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn($query) => $query->where('user_id', auth()->user()->id))
+            ->modifyQueryUsing(fn ($query) => $query->where('user_id', auth()->user()->id))
             ->columns([
                 Tables\Columns\TextColumn::make('income_category.title')
                     ->numeric()
