@@ -33,16 +33,22 @@ class DemoChartWidget extends ChartWidget
             $monthly_incomes[$month] += $income->amount; // Sum the amounts for each month
         }
 
+        // Determine colors for expenses based on comparison
+        $expense_colors = [];
+        for ($month = 1; $month <= 12; $month++) {
+            $expense_colors[] = $monthly_expenses[$month] > $monthly_incomes[$month] ? '#ef4444' : '#eab308';
+        }
+
         return [
             'datasets' => [
                 [
-                    'label' => 'Expense in '.$current_year,
+                    'label' => 'Expense in ' . $current_year,
                     'data' => array_values($monthly_expenses),
-                    'backgroundColor' => '#eab308',
-                    'borderColor' => '#eab308',
+                    'backgroundColor' => $expense_colors, // Dynamic colors for each month
+                    'borderColor' => $expense_colors, // Matching border color
                 ],
                 [
-                    'label' => 'Income in '.$current_year,
+                    'label' => 'Income in ' . $current_year,
                     'data' => array_values($monthly_incomes),
                     'backgroundColor' => '#22c55e',
                     'borderColor' => '#22c55e',
@@ -51,6 +57,7 @@ class DemoChartWidget extends ChartWidget
             'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         ];
     }
+
 
     protected function getType(): string
     {
