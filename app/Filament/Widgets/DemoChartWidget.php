@@ -44,13 +44,13 @@ class DemoChartWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Income in '.$current_year,
+                    'label' => 'Income in ' . $current_year,
                     'data' => array_values($monthly_incomes),
                     'backgroundColor' => '#22c55e',
                     'borderColor' => '#22c55e',
                 ],
                 [
-                    'label' => 'Expense in '.$current_year,
+                    'label' => 'Expense in ' . $current_year,
                     'data' => array_values($monthly_expenses),
                     'backgroundColor' => $expense_colors, // Dynamic colors for each month
                     'borderColor' => $expense_colors, // Matching border color
