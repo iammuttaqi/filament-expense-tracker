@@ -11,6 +11,8 @@ class DemoChartWidget extends ChartWidget
 {
     protected static ?string $heading = 'Chart';
 
+    protected static ?int $sort = 3;
+
     protected int|string|array $columnSpan = 'full';
 
     protected function getData(): array
@@ -42,16 +44,16 @@ class DemoChartWidget extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Expense in ' . $current_year,
-                    'data' => array_values($monthly_expenses),
-                    'backgroundColor' => $expense_colors, // Dynamic colors for each month
-                    'borderColor' => $expense_colors, // Matching border color
-                ],
-                [
                     'label' => 'Income in ' . $current_year,
                     'data' => array_values($monthly_incomes),
                     'backgroundColor' => '#22c55e',
                     'borderColor' => '#22c55e',
+                ],
+                [
+                    'label' => 'Expense in ' . $current_year,
+                    'data' => array_values($monthly_expenses),
+                    'backgroundColor' => $expense_colors, // Dynamic colors for each month
+                    'borderColor' => $expense_colors, // Matching border color
                 ],
             ],
             'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
